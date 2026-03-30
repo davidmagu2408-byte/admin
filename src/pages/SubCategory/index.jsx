@@ -3,20 +3,25 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
-import { fetchDataFromAPI } from "../../apis/api";
+import { fetchDataFromAPI, deleteData } from "../../apis/api";
 import Pagination from "@mui/material/Pagination";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
+import toast, { Toaster } from "react-hot-toast";
 
 const SubCategory = () => {
   const [subCategoryData, setSubCategoryData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
 
-  useEffect(() => {
+  const loadData = () => {
     fetchDataFromAPI("/subcategory").then((data) =>
       setSubCategoryData(data.subCategory),
     );
     fetchDataFromAPI("/category").then((data) => setCategoryData(data));
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
 
   const handleChange = (event, value) => {
@@ -25,16 +30,20 @@ const SubCategory = () => {
     );
   };
 
-  const handleClick = (event, chipKey) => {
-    console.log(`Chip with key ${chipKey} was clicked`);
-  };
-
-  const handleDelete = (event, chipId) => {
-    console.log(`Chip with id ${chipId} was deleted`);
+  const handleDelete = async (event, chipId) => {
+    if (!window.confirm("Bạn có chắc muốn xoá danh mục phụ này?")) return;
+    const res = await deleteData(`/subcategory/delete/${chipId}`);
+    if (res?.data?.success || res?.status === 200) {
+      toast.success("Đã xoá danh mục phụ");
+      loadData();
+    } else {
+      toast.error("Xoá thất bại");
+    }
   };
 
   return (
     <>
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="right-content w-100 page-transition">
         <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
           <h5 className="mb-0">Sub Category List</h5>
@@ -107,14 +116,11 @@ const SubCategory = () => {
                                 )
                                 .map((sub) => {
                                   return (
-                                    <ListItem key={sub.key} className="p-1">
+                                    <ListItem key={sub.id} className="p-1">
                                       <Chip
                                         key={sub.id}
                                         className="me-1"
                                         label={sub.name}
-                                        onClick={(event) =>
-                                          handleClick(event, sub.key)
-                                        }
                                         onDelete={(event) =>
                                           handleDelete(event, sub.id)
                                         }

@@ -14,11 +14,12 @@ import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
 import Select from "@mui/material/Select";
 import Rating from "@mui/material/Rating";
 import MenuItem from "@mui/material/MenuItem";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProductEdit = () => {
   const { id } = useParams();
   // product data fetched from API by id
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState({});
   // categories, subcategories, brand list fetched from API
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -96,28 +97,26 @@ const ProductEdit = () => {
     formData.append("existingImages", JSON.stringify(existingImages));
     newFiles.forEach((file) => formData.append("images", file));
     editProduct(id, formData).then((res) => {
-      console.log(res);
       if (res && res.success === true) {
-        alert("Edit Category Successfully");
-        navigation("/product");
+        toast.success("Cập nhật sản phẩm thành công!");
+        setTimeout(() => navigation("/product"), 1000);
       } else {
-        alert("Failed to edit category. Please try again.");
+        toast.error(res?.message || "Cập nhật thất bại. Vui lòng thử lại.");
       }
     });
   };
 
   useEffect(() => {
-    fetchProductById(id).then((data) => {
-      console.log(data);
-      setProduct(data || []);
-      setImagePreview(data.images || []);
-      setSelectedBrand(data.brand.id || "");
-      setSelectedCategory(data.category.id || "");
-      setSelectedSubCategory(
-        data.subcategory.id || data.brand.subcategory || "",
-      );
-      setIsFeatured(data.isFeatured || false);
-      setValueRate(data.rating || 0);
+    fetchProductById(id).then((res) => {
+      const p = res?.product;
+      if (!p) return;
+      setProduct(p);
+      setImagePreview(p.images || []);
+      setSelectedCategory(p.category?._id || p.category?.id || "");
+      setSelectedSubCategory(p.subcategory?._id || p.subcategory?.id || "");
+      setSelectedBrand(p.brand?._id || p.brand?.id || "");
+      setIsFeatured(p.isFeatured ?? false);
+      setValueRate(p.rating || 0);
     });
     fetchDataFromAPI("/category")
       .then((data) => {
@@ -362,6 +361,7 @@ const ProductEdit = () => {
           </div>
         </div>
       </form>
+      <Toaster position="top-right" />
     </div>
   );
 };
