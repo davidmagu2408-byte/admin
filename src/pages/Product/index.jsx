@@ -98,13 +98,13 @@ const Products = () => {
           <table className="table table-bordered table-striped v-align">
             <thead className="thead-dark">
               <tr>
-                <th scope="col">PRODUCT</th>
-                <th scope="col">CATEGORY</th>
-                <th scope="col">SUBCATEGORY</th>
-                <th scope="col">BRAND</th>
-                <th scope="col">PRICE</th>
-                <th scope="col">RATING</th>
-                <th scope="col">ACTION</th>
+                <th scope="col">SẢN PHẨM</th>
+                <th scope="col">DANH MỤC</th>
+                <th scope="col">DANH MỤC CON</th>
+                <th scope="col">THƯƠNG HIỆU</th>
+                <th scope="col">GIÁ</th>
+                <th scope="col">ĐÁNH GIÁ</th>
+                <th scope="col">HÀNH ĐỘNG</th>
               </tr>
             </thead>
             <tbody>

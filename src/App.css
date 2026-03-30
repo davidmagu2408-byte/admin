@@ -1258,9 +1258,21 @@ body.dark .MuiTablePagination-root {
 }
 
 
-/* body.dark table td {
+body.dark .table tbody td {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+body.dark td .info h6 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+body.dark td .info p {
   color: rgba(255, 255, 255, 0.5) !important;
-} */
+}
+
+body.dark .table-striped tbody tr:nth-of-type(even) {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
 
 .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
   background-color: #0858f7 !important;
