@@ -15,9 +15,10 @@ const Categories = () => {
     deleteData(`/category/delete/${id}`)
       .then((res) => {
         alert("Category Deleted Successfully");
-        setCategoriesData(
-          categorieData.filter((category) => category.id !== id),
-        );
+        setCategoriesData((prev) => ({
+          ...prev,
+          categoryList: prev.categoryList.filter((c) => c.id !== id),
+        }));
       })
       .catch((error) => {
         console.error("Delete failed:", error);
@@ -37,7 +38,7 @@ const Categories = () => {
 
   return (
     <>
-      <div className="right-content w-100">
+      <div className="right-content w-100 page-transition">
         <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
           <h5 className="mb-0">Category List</h5>
           <div className="ms-auto d-flex align-items-center">

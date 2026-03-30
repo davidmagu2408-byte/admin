@@ -47,7 +47,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="right-content w-100">
+    <div className="right-content w-100 page-transition">
       <div className="row dashboardBoxWrapperRow dashboard_Box dashboardBoxWrapperRowV2">
         <div className="col-sm-12">
           <div className="dashboardBoxWrapper d-flex">

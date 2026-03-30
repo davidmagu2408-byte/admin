@@ -19,6 +19,8 @@ import SubCategory from "./pages/SubCategory";
 import SubCategoryAdd from "./pages/SubCategory/SubCategoryAdd";
 import Brand from "./pages/Brand";
 import BrandAdd from "./pages/Brand/BrandAdd";
+import Banner from "./pages/Banner";
+import BannerAdd from "./pages/Banner/BannerAdd";
 import { useToast } from "./utils/Toast";
 import axiosInstance, {
   setAxiosAuthToken,
@@ -72,17 +74,15 @@ function App() {
     root.classList.remove("light", "dark");
     root.classList.add(theme);
 
-    setTimeout(() => {
-      if (accessToken) {
-        setIsOpenLogin(false);
-        setisOpenHeaderFooterShow(true);
-        setIsToggleSibar(true);
-      } else {
-        setIsOpenLogin(true);
-        setisOpenHeaderFooterShow(false);
-        setIsToggleSibar(false);
-      }
-    }, 2000);
+    if (accessToken) {
+      setIsOpenLogin(false);
+      setisOpenHeaderFooterShow(true);
+      setIsToggleSibar(true);
+    } else {
+      setIsOpenLogin(true);
+      setisOpenHeaderFooterShow(false);
+      setIsToggleSibar(false);
+    }
   }, [theme, accessToken]);
 
   useEffect(() => {
@@ -171,6 +171,12 @@ function App() {
                 />
                 <Route path="/brand" exact={true} element={<Brand />} />
                 <Route path="/brand/add" exact={true} element={<BrandAdd />} />
+                <Route path="/banners" exact={true} element={<Banner />} />
+                <Route
+                  path="/banner/add"
+                  exact={true}
+                  element={<BannerAdd />}
+                />
               </>
             ) : (
               <Route path="*" element={<Navigate to="/login" replace />} />

@@ -33,6 +33,72 @@ body.dark {
   background: transparent !important;
 }
 
+/* Component Transition Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Page Container Transitions */
+.page-transition {
+  animation: fadeInUp 0.4s ease-out;
+  will-change: opacity, transform;
+}
+
+/* Content Area Smooth Transition */
+.right-content {
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+/* Component Fade In */
+.component-enter {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Header entrance */
+header {
+  animation: slideInFromLeft 0.4s ease-out;
+}
+
+/* Button and interactive elements smooth transitions */
+button {
+  transition: all 0.2s ease-out;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
 .list_ li {
   vertical-align: top !important;
 }
@@ -544,15 +610,17 @@ main .sidebarWrapper .sidebar ul li button * {
   justify-content: center;
   width: 25px;
   height: 25px;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .main .sidebarWrapper .sidebar ul li button:hover {
   background: #f1f1f1 !important;
+  transform: translateX(4px);
 }
 
 body.dark .main .sidebarWrapper .sidebar ul li button:hover {
   background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateX(4px);
 }
 
 .main .sidebarWrapper .sidebar ul li button.active {
@@ -569,6 +637,10 @@ body.dark .main .sidebarWrapper .sidebar ul li button.active {
 
 .main .sidebarWrapper .sidebar ul li button.active .arrow {
   transform: rotate(90deg);
+}
+
+.main .sidebarWrapper .sidebar ul li button {
+  transition: all 0.25s ease-out;
 }
 
 .main .sidebarWrapper .sidebar ul .submenu {
@@ -604,8 +676,27 @@ body.dark .main .sidebarWrapper .sidebar ul .submenu::before {
   padding: 6px 0px;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.3s;
+  transition: all 0.25s ease-out;
   position: relative;
+  animation: slideInLeft 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.main .sidebarWrapper .sidebar ul .submenuWrapper.collapsed .submenu li a {
+  animation: none;
+  opacity: 0;
 }
 
 .main .sidebarWrapper .sidebar ul .submenu li a::before {
@@ -617,7 +708,7 @@ body.dark .main .sidebarWrapper .sidebar ul .submenu::before {
   left: -21px;
   background: #0858f7;
   opacity: 0;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main .sidebarWrapper .sidebar ul .submenu li a.active::before {
@@ -634,6 +725,7 @@ body.dark .main .sidebarWrapper .sidebar ul .submenu li a {
 .main .sidebarWrapper .sidebar ul .submenu li a.active,
 body.dark .main .sidebarWrapper .sidebar ul .submenu li a.active {
   color: #0858f7 !important;
+  transform: translateX(4px);
 }
 
 body.dark .main .sidebarWrapper .sidebar ul .submenu li a:hover {
@@ -641,10 +733,12 @@ body.dark .main .sidebarWrapper .sidebar ul .submenu li a:hover {
 }
 
 .main .sidebarWrapper .sidebar ul .submenuWrapper {
-  transition: all 0.4s;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-out;
+  max-height: 0;
   height: 0px;
   overflow: hidden;
   opacity: 0;
+  will-change: max-height, opacity;
 }
 
 .main .sidebarWrapper .sidebar ul .submenuWrapper.collapsed .submenu {
@@ -652,6 +746,7 @@ body.dark .main .sidebarWrapper .sidebar ul .submenu li a:hover {
 }
 
 .main .sidebarWrapper .sidebar ul .submenuWrapper.collapse {
+  max-height: 600px;
   height: auto;
   overflow: inherit;
   opacity: 1;
@@ -1725,14 +1820,15 @@ form .form-group h6 {
 
 .imgUploadBox {
   width: 100%;
-  flex-wrap: nowrap;
-  gap: 10px;
+  flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .imgUploadBox .uploadBox {
   width: 150px;
   height: 150px !important;
   padding: 0px;
+  margin: 10px;
   border-radius: 10px;
   border: 1px dashed rgba(0, 0, 0, 0.3);
   position: relative;
@@ -1780,12 +1876,19 @@ body.dark .imgUploadBox .uploadBox * {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   background: #d32f2f;
   border-radius: 50%;
   cursor: pointer;
   z-index: 100;
+  opacity: 1;
+  transition: transform 0.2s ease;
+}
+
+.imgUploadBox .uploadBox .remove:hover {
+  transform: scale(1.2);
+  background: #b71c1c;
 }
 
 .imgUploadBox .uploadBox .remove svg {
@@ -1806,8 +1909,11 @@ body.dark .imgUploadBox .uploadBox {
 }
 
 .imgUploadBox .uploadBox img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
 }
 
 .imgUploadBox .uploadBox input {

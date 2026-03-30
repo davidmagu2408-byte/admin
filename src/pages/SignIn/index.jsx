@@ -57,12 +57,12 @@ const SignIn = () => {
         if (data.user.isAdmin === true) {
           setAccessTokenHandler(data.accessToken);
           context.setUser(data.user);
-          showToast(data.message, "success");
           setTimeout(() => {
-            navigate("/");
-            context.setisOpenHeaderFooterShow(true);
-            context.setIsToggleSibar(true);
+            showToast(data.message, "success");
           }, 1000);
+          navigate("/");
+          context.setisOpenHeaderFooterShow(true);
+          context.setIsToggleSibar(true);
         } else {
           showToast("Tài khoản không có quyền Admin", "error");
         }
@@ -79,7 +79,7 @@ const SignIn = () => {
     <>
       <Toast />
       <img src={Background} className="loginPatern" alt="background" />
-      <section className="loginSection">
+      <section className="loginSection page-transition">
         <div className="loginBox">
           <a className="d-flex align-items-center flex-column logo" href="/">
             <img src={Logo} alt="Logo" />

@@ -7,11 +7,15 @@ import { FaCartArrowDown } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { IoMdImages } from "react-icons/io";
-import { deleteData } from "../../apis/api";
+import { logout } from "../../apis/api";
+import { MyContext } from "../../context/MyContext";
+import { useContext } from "react";
+import axiosInstance from "../../apis/axiosConfig";
 
 const Sidebar = () => {
   const [active, setActive] = useState(0);
   const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
+  const context = useContext(MyContext);
 
   const isOpenSubMenu = (index) => {
     if (active === index) {
@@ -22,24 +26,24 @@ const Sidebar = () => {
     }
   };
 
-  const handleLogOut = () => {
-    deleteData("/user/logout")
-      .then((res) => {
-        if (res.status === 200) {
-          context.setisOpenHeaderFooterShow(false);
-          context.setIsToggleSibar(false);
-          context.setIsOpenLogin(true);
-          window.location.href = "/login";
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const handleLogOut = async () => {
+    try {
+      const res = await axiosInstance.post("/user/logout");
+      if (res.data.success === true) {
+        context.setUser(null);
+        context.setAccessToken(null);
+        context.setisOpenHeaderFooterShow(false);
+        context.setIsToggleSibar(false);
+        context.setIsOpenLogin(true);
+        window.location.href = "/login";
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
   return (
     <>
-      <div className="sidebar">
+      <div className="sidebar page-transition">
         <ul>
           <li>
             <Link to="/">
@@ -71,10 +75,10 @@ const Sidebar = () => {
               className={`submenuWrapper ${active === 1 && isToggleSubmenu === true ? "collapse" : "collapsed"}`}
             >
               <ul className="submenu">
-                <li>
+                <li style={{ animationDelay: "0.05s" }}>
                   <Link to="/banners">All Banners</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.1s" }}>
                   <Link to="/banner/add">Add Home Banner Slide</Link>
                 </li>
               </ul>
@@ -97,22 +101,22 @@ const Sidebar = () => {
               className={`submenuWrapper ${active === 2 && isToggleSubmenu === true ? "collapse" : "collapsed"}`}
             >
               <ul className="submenu">
-                <li>
+                <li style={{ animationDelay: "0.05s" }}>
                   <Link to="/category">All Categories</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.1s" }}>
                   <Link to="/category/add">Add Category</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.15s" }}>
                   <Link to="/subcategory">Sub Category List</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.2s" }}>
                   <Link to="/subcategory/add">Add Sub Category</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.25s" }}>
                   <Link to="/brand">Brand List</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.3s" }}>
                   <Link to="/brand/add">Add Brand</Link>
                 </li>
               </ul>
@@ -135,10 +139,10 @@ const Sidebar = () => {
               className={`submenuWrapper ${active === 3 && isToggleSubmenu === true ? "collapse" : "collapsed"}`}
             >
               <ul className="submenu">
-                <li>
+                <li style={{ animationDelay: "0.05s" }}>
                   <Link to="/product">All Products</Link>
                 </li>
-                <li>
+                <li style={{ animationDelay: "0.1s" }}>
                   <Link to="/product/add">Add Product</Link>
                 </li>
               </ul>
