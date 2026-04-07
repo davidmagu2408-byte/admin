@@ -67,7 +67,6 @@ const SignIn = () => {
           showToast("Tài khoản không có quyền Admin", "error");
         }
       } catch (error) {
-        console.log(error);
         showToast(error.response?.data?.message || "Login failed", "error");
       } finally {
         setIsLoading(false);

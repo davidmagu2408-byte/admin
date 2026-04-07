@@ -1,10 +1,8 @@
-import axios from "axios";
+import api from "./axiosConfig";
 
 export const fetchDataFromAPI = async (url) => {
   try {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + url, {
-      withCredentials: true,
-    });
+    const { data } = await api.get(url);
     return data;
   } catch (error) {
     console.log("error", error);
@@ -14,11 +12,7 @@ export const fetchDataFromAPI = async (url) => {
 
 export const postData = async (url, formData) => {
   try {
-    const response = await axios.post(
-      import.meta.env.VITE_API_URL + url,
-      formData,
-      { withCredentials: true },
-    );
+    const response = await api.post(url, formData);
     return response.data;
   } catch (error) {
     console.log("error:", error);
@@ -28,9 +22,7 @@ export const postData = async (url, formData) => {
 
 export const deleteData = async (url) => {
   try {
-    const response = await axios.delete(import.meta.env.VITE_API_URL + url, {
-      withCredentials: true,
-    });
+    const response = await api.delete(url);
     return response;
   } catch (error) {
     return error;
@@ -39,9 +31,7 @@ export const deleteData = async (url) => {
 
 export const logout = async (url) => {
   try {
-    const response = await axios.post(import.meta.env.VITE_API_URL + url, {
-      withCredentials: true,
-    });
+    const response = await api.post(url);
     return response.data;
   } catch (error) {
     return error;
@@ -50,10 +40,7 @@ export const logout = async (url) => {
 
 export const fetchCategoryById = async (id) => {
   try {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/category/${id}`,
-      { withCredentials: true },
-    );
+    const { data } = await api.get(`/category/${id}`);
     return data;
   } catch (error) {
     return error;
@@ -62,12 +49,7 @@ export const fetchCategoryById = async (id) => {
 
 export const editCategory = async (id, formData) => {
   try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/category/edit/${id}`,
-      formData,
-      { withCredentials: true },
-    );
-    console.log("response edit", response);
+    const response = await api.put(`/category/edit/${id}`, formData);
     return response.data;
   } catch (error) {
     return error;
@@ -76,10 +58,7 @@ export const editCategory = async (id, formData) => {
 
 export const fetchProductById = async (id) => {
   try {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/product/${id}`,
-      { withCredentials: true },
-    );
+    const { data } = await api.get(`/product/${id}`);
     return data;
   } catch (error) {
     console.log("error", error);
@@ -89,12 +68,7 @@ export const fetchProductById = async (id) => {
 
 export const editProduct = async (id, formData) => {
   try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/product/${id}`,
-      formData,
-      { withCredentials: true },
-    );
-    console.log("response edit", response);
+    const response = await api.put(`/product/${id}`, formData);
     return response.data;
   } catch (error) {
     return error;

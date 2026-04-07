@@ -1,12 +1,10 @@
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
-import HomeIcon from "@mui/icons-material/Home";
 import { useEffect, useState } from "react";
 import { postData, fetchDataFromAPI } from "../../apis/api";
 import toast, { Toaster } from "react-hot-toast";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import PageHeader from "../../components/PageHeader";
+import FormInput from "../../components/FormInput";
+import DropdownField from "../../components/DropdownField";
 
 const BrandAdd = () => {
   const [subCategoryData, setSubCategoryData] = useState([]);
@@ -16,10 +14,6 @@ const BrandAdd = () => {
     subcategory: "",
   });
   const [selectedsubCategory, setSelectedSubCategory] = useState("");
-
-  const handleChangeSubCategory = (e) => {
-    setSelectedSubCategory(e.target.value ?? []);
-  };
 
   const changeInput = (e) => {
     setBrand(() => ({
@@ -48,8 +42,7 @@ const BrandAdd = () => {
         }
       })
       .catch((error) => {
-        console.error("Error adding brand:", error);
-        toast.error("Failed to add Brand." + error);
+        toast.error(error.response?.data?.message || "Failed to add Brand.");
       });
   };
 
@@ -74,57 +67,28 @@ const BrandAdd = () => {
     <>
       <Toaster position="top-right" reverseOrder={false} />;
       <div className="right-content w-100">
-        <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Brand Add</h5>
-          <div className="ms-auto d-flex align-items-center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              className="ms-auto breadcrumbs_"
-            >
-              <StyledBreadcrumb
-                component="a"
-                href="#"
-                label="Dashboard"
-                icon={<HomeIcon fontSize="small" />}
-              />
-              <StyledBreadcrumb component="a" href="#" label="Brand" />
-              <StyledBreadcrumb component="a" href="#" label="Add Brand" />
-            </Breadcrumbs>
-          </div>
-        </div>
+        <PageHeader
+          title="Brand Add"
+          breadcrumbs={[{ label: "Brand" }, { label: "Add Brand" }]}
+        />
         <form className="form" onSubmit={addBrandCategory}>
           <div className="row">
             <div className="col-sm-9">
               <div className="card p-4">
-                <div className="form-group">
-                  <h6>Category</h6>
-                  <Select
-                    value={selectedsubCategory}
-                    onChange={handleChangeSubCategory}
-                    displayEmpty
-                    inputProps={{ "aria-label": "Without label" }}
-                    className="w-100"
-                  >
-                    {subCategoryData?.subCategory &&
-                      subCategoryData.subCategory.length !== 0 &&
-                      subCategoryData.subCategory.map((item) => {
-                        return (
-                          <MenuItem key={item._id} value={item._id}>
-                            {categoryData?.category &&
-                              categoryData.category.length !== 0 &&
-                              categoryData.category
-                                .filter((cat) => cat.id === item.category)
-                                .map((it) => it.name)}
-                            /{item.name}
-                          </MenuItem>
-                        );
-                      })}
-                  </Select>
-                </div>
-                <div className="form-group">
-                  <h6>Brand</h6>
-                  <input type="text" name="name" onChange={changeInput} />
-                </div>
+                <DropdownField
+                  label="Category"
+                  value={selectedsubCategory}
+                  onChange={setSelectedSubCategory}
+                  options={subCategoryData?.subCategory}
+                  displayKey={(item) => {
+                    const catName = categoryData?.category
+                      ?.filter((cat) => cat.id === item.category)
+                      .map((it) => it.name)
+                      .join("");
+                    return `${catName}/${item.name}`;
+                  }}
+                />
+                <FormInput label="Brand" name="name" onChange={changeInput} />
                 <Button type="submit" className="btn-blue btn-lg btn-big w-100">
                   ADD BRAND
                 </Button>

@@ -38,7 +38,7 @@ const Sidebar = () => {
         window.location.href = "/login";
       }
     } catch (error) {
-      console.log(error);
+      // logout failed silently
     }
   };
   return (

@@ -94,7 +94,6 @@ function App() {
         const { data } = await axiosInstance.get("/user/refresh-token", {
           withCredentials: true,
         });
-        console.log(data);
         if (data?.accessToken) {
           setAccessToken(data.accessToken);
           // Fetch user profile immediately after getting token

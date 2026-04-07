@@ -1,32 +1,33 @@
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { deleteData, fetchDataFromAPI } from "../../apis/api";
 import Pagination from "@mui/material/Pagination";
+import PageHeader from "../../components/PageHeader";
+import toast from "react-hot-toast";
 
 const Categories = () => {
   const [categorieData, setCategoriesData] = useState([]);
+  const [page, setPage] = useState(1);
 
   const deleteCategory = (id) => {
+    if (!window.confirm("Bạn có chắc muốn xoá danh mục này?")) return;
     deleteData(`/category/delete/${id}`)
       .then((res) => {
-        alert("Category Deleted Successfully");
+        toast.success("Xoá danh mục thành công");
         setCategoriesData((prev) => ({
           ...prev,
           categoryList: prev.categoryList.filter((c) => c.id !== id),
         }));
       })
       .catch((error) => {
-        console.error("Delete failed:", error);
-        alert("Failed to delete category. Please try again.");
+        toast.error("Xoá danh mục thất bại. Vui lòng thử lại.");
       });
   };
 
   const handleChange = (event, value) => {
+    setPage(value);
     fetchDataFromAPI(`/category?page=${value}`).then((data) =>
       setCategoriesData(data),
     );
@@ -39,26 +40,12 @@ const Categories = () => {
   return (
     <>
       <div className="right-content w-100 page-transition">
-        <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Category List</h5>
-          <div className="ms-auto d-flex align-items-center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              className="ml-auto breadcrumbs_"
-            >
-              <StyledBreadcrumb
-                component="a"
-                href="#"
-                label="Dashboard"
-                icon={<HomeIcon fontSize="small" />}
-              />
-              <StyledBreadcrumb component="a" href="#" label="Category" />
-            </Breadcrumbs>
-            <a href="/category/add">
-              <Button className="btn-blue  ms-3 ps-3 pe-3">Add Category</Button>
-            </a>
-          </div>
-        </div>
+        <PageHeader
+          title="Category List"
+          breadcrumbs={[{ label: "Category" }]}
+          addButtonText="Add Category"
+          addButtonLink="/category/add"
+        />
         <div className="card shadow border-0 w-100 mt-4">
           <div className="card-body">
             <table className="table table-bordered table-striped v-align">
@@ -121,7 +108,8 @@ const Categories = () => {
           </div>
           <div className="d-flex tableFooter me-4">
             <Pagination
-              count={categorieData?.totalPages}
+              count={categorieData?.totalPages || 1}
+              page={page}
               color="primary"
               className="pagination"
               showFirstButton

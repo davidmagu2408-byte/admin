@@ -1,14 +1,12 @@
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProductById } from "../../apis/api";
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
 import ProductZoom from "../../components/ProductZoom";
 import { MdOutlineBrandingWatermark } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
 import { MdOutlineRateReview } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
+import PageHeader from "../../components/PageHeader";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -24,21 +22,10 @@ const ProductDetails = () => {
 
   return (
     <div className="right-content w-100 productDetails">
-      <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-        <h5 className="mb-0">Product View</h5>
-        <div className="ms-auto d-flex align-items-center">
-          <Breadcrumbs aria-label="breadcrumb" className="ms-auto breadcrumbs_">
-            <StyledBreadcrumb
-              component="a"
-              href="#"
-              label="Dashboard"
-              icon={<HomeIcon fontSize="small" />}
-            />
-            <StyledBreadcrumb component="a" href="#" label="Product" />
-            <StyledBreadcrumb component="a" href="#" label="Product Details" />
-          </Breadcrumbs>
-        </div>
-      </div>
+      <PageHeader
+        title="Product View"
+        breadcrumbs={[{ label: "Product" }, { label: "Product Details" }]}
+      />
       <div className="card productDetailsSEction">
         <div className="row">
           <div className="col-md-5">

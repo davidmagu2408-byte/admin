@@ -9,6 +9,7 @@ import { IoMdCart } from "react-icons/io";
 import { MdShoppingBag } from "react-icons/md";
 import Rating from "@mui/material/Rating";
 import { IoEyeSharp } from "react-icons/io5";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const [productData, setproductData] = useState([]);
@@ -17,14 +18,14 @@ const Dashboard = () => {
   const [brands, setBrands] = useState([]);
 
   const deleteProduct = (id) => {
+    if (!window.confirm("Bạn có chắc muốn xoá sản phẩm này?")) return;
     deleteData(`/product/delete/${id}`)
       .then((res) => {
-        alert("Product Deleted Successfully");
+        toast.success("Xoá sản phẩm thành công");
         setproductData(productData.filter((product) => product.id !== id));
       })
       .catch((error) => {
-        console.error("Delete failed:", error);
-        alert("Failed to delete category. Please try again.");
+        toast.error("Xoá sản phẩm thất bại. Vui lòng thử lại.");
       });
   };
   useEffect(() => {
@@ -97,8 +98,6 @@ const Dashboard = () => {
               {productData.product &&
                 productData.product.length !== 0 &&
                 productData.product.map((item) => {
-                  console.log(item);
-
                   return (
                     <tr key={item.id}>
                       <td>

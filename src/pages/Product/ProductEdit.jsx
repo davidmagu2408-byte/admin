@@ -1,8 +1,4 @@
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
-import { FaImages } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -10,11 +6,12 @@ import {
   fetchProductById,
   fetchDataFromAPI,
 } from "../../apis/api";
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
-import Select from "@mui/material/Select";
 import Rating from "@mui/material/Rating";
-import MenuItem from "@mui/material/MenuItem";
 import toast, { Toaster } from "react-hot-toast";
+import PageHeader from "../../components/PageHeader";
+import ImageUpload from "../../components/ImageUpload";
+import FormInput from "../../components/FormInput";
+import DropdownField from "../../components/DropdownField";
 
 const ProductEdit = () => {
   const { id } = useParams();
@@ -36,41 +33,11 @@ const ProductEdit = () => {
   const [valueRate, setValueRate] = useState(0);
   const navigation = useNavigate();
 
-  const handleChangeCategory = (e) => {
-    setSelectedCategory(e.target.value ?? "");
-  };
-
-  const handleChangeSubCategory = (e) => {
-    setSelectedSubCategory(e.target.value ?? "");
-  };
-
-  const handleChangeBrand = (e) => {
-    setSelectedBrand(e.target.value ?? "");
-  };
-
-  const changeRating = (e) => {
-    setValueRate(e.target.value);
-  };
-  const handelChangeFeatured = (e) => {
-    setIsFeatured(e.target.value);
-  };
-
   const changeInput = (e) => {
-    console.log(e.target.name, e.target.value);
     setProduct(() => ({
       ...product,
       [e.target.name]: e.target.value,
     }));
-  };
-
-  const addImage = (e) => {
-    const files = Array.from(e.target.files);
-    setProduct((prev) => ({
-      ...prev,
-      images: [...prev.images, ...files],
-    }));
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
-    setImagePreview((prev) => [...prev, ...newPreviews]);
   };
   const EditProduct = (e) => {
     e.preventDefault();
@@ -96,14 +63,18 @@ const ProductEdit = () => {
     });
     formData.append("existingImages", JSON.stringify(existingImages));
     newFiles.forEach((file) => formData.append("images", file));
-    editProduct(id, formData).then((res) => {
-      if (res && res.success === true) {
-        toast.success("Cập nhật sản phẩm thành công!");
-        setTimeout(() => navigation("/product"), 1000);
-      } else {
-        toast.error(res?.message || "Cập nhật thất bại. Vui lòng thử lại.");
-      }
-    });
+    editProduct(id, formData)
+      .then((res) => {
+        if (res && res.success === true) {
+          toast.success("Cập nhật sản phẩm thành công!");
+          setTimeout(() => navigation("/product"), 1000);
+        } else {
+          toast.error(res?.message || "Cập nhật thất bại. Vui lòng thử lại.");
+        }
+      })
+      .catch(() => {
+        toast.error("Lỗi kết nối. Vui lòng thử lại.");
+      });
   };
 
   useEffect(() => {
@@ -137,177 +108,103 @@ const ProductEdit = () => {
 
   return (
     <div className="right-content w-100">
-      <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-        <h5 className="mb-0">Product Edit</h5>
-        <div className="ms-auto d-flex align-items-center">
-          <Breadcrumbs aria-label="breadcrumb" className="ms-auto breadcrumbs_">
-            <StyledBreadcrumb
-              component="a"
-              href="#"
-              label="Dashboard"
-              icon={<HomeIcon fontSize="small" />}
-            />
-            <StyledBreadcrumb component="a" href="#" label="Product" />
-            <StyledBreadcrumb component="a" href="#" label="Edit Product" />
-          </Breadcrumbs>
-        </div>
-      </div>
+      <PageHeader
+        title="Product Edit"
+        breadcrumbs={[{ label: "Product" }, { label: "Edit Product" }]}
+      />
       <form className="form" onSubmit={EditProduct}>
         <div className="row">
           <div className="col-sm-12">
             <div className="card p-4 mt-0">
               <h4>Basic information</h4>
-              <div className="form-group">
-                <h6>Product Name</h6>
-                <input
-                  type="text"
-                  name="name"
-                  onChange={changeInput}
-                  value={product.name || ""}
-                />
-              </div>
-              <div className="form-group">
-                <h6>Description</h6>
-                <input
-                  type="text"
-                  name="description"
-                  onChange={changeInput}
-                  value={product.description || ""}
-                />
-              </div>
+              <FormInput
+                label="Product Name"
+                name="name"
+                onChange={changeInput}
+                value={product.name || ""}
+              />
+              <FormInput
+                label="Description"
+                name="description"
+                onChange={changeInput}
+                value={product.description || ""}
+              />
               <div className="row">
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Category</h6>
-                    <Select
-                      value={selectedCategory}
-                      onChange={handleChangeCategory}
-                      displayEmpty
-                      inputProps={{ "aria-label": "Without label" }}
-                      className="w-100"
-                    >
-                      <MenuItem value="">None</MenuItem>
-                      {categories &&
-                        categories.length !== 0 &&
-                        categories.map((item) => (
-                          <MenuItem key={item._id} value={item._id}>
-                            {item.name}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </div>
+                  <DropdownField
+                    label="Category"
+                    value={selectedCategory}
+                    onChange={setSelectedCategory}
+                    options={categories}
+                  />
                 </div>
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Sub Category</h6>
-                    <Select
-                      value={selectedSubCategory}
-                      onChange={handleChangeSubCategory}
-                      displayEmpty
-                      inputProps={{ "aria-label": "Without label" }}
-                      className="w-100"
-                    >
-                      <MenuItem value="">None</MenuItem>
-                      {subcategories &&
-                        subcategories.length !== 0 &&
-                        subcategories
-                          .filter((item) => item.category === selectedCategory)
-                          .map((item) => (
-                            <MenuItem key={item._id} value={item._id}>
-                              {item.name}
-                            </MenuItem>
-                          ))}
-                    </Select>
-                  </div>
+                  <DropdownField
+                    label="Sub Category"
+                    value={selectedSubCategory}
+                    onChange={setSelectedSubCategory}
+                    options={subcategories?.filter(
+                      (item) => item.category === selectedCategory,
+                    )}
+                  />
                 </div>
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Price</h6>
-                    <input
-                      type="text"
-                      name="price"
-                      onChange={changeInput}
-                      value={product.price || 0}
-                    />
-                  </div>
+                  <FormInput
+                    label="Price"
+                    name="price"
+                    onChange={changeInput}
+                    value={product.price || 0}
+                  />
                 </div>
               </div>
               <div className="row">
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Old Price</h6>
-                    <input
-                      type="text"
-                      name="oldPrice"
-                      onChange={changeInput}
-                      value={product.oldPrice || 0}
-                    />
-                  </div>
+                  <FormInput
+                    label="Old Price"
+                    name="oldPrice"
+                    onChange={changeInput}
+                    value={product.oldPrice || 0}
+                  />
                 </div>
                 <div className="col">
-                  <div className="form-group">
-                    <h6>isFeatured</h6>
-                    <Select
-                      value={isFeatured}
-                      onChange={handelChangeFeatured}
-                      displayEmpty
-                      inputProps={{ "aria-label": "Without label" }}
-                      className="w-100"
-                    >
-                      <MenuItem value="">None</MenuItem>
-                      <MenuItem value={true}>True</MenuItem>
-                      <MenuItem value={false}>False</MenuItem>
-                    </Select>
-                  </div>
+                  <DropdownField
+                    label="isFeatured"
+                    value={isFeatured}
+                    onChange={setIsFeatured}
+                    options={[
+                      { _id: true, name: "True" },
+                      { _id: false, name: "False" },
+                    ]}
+                  />
                 </div>
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Count In Stock</h6>
-                    <input
-                      type="text"
-                      name="countInStock"
-                      onChange={changeInput}
-                      value={product.countInStock || 0}
-                    />
-                  </div>
+                  <FormInput
+                    label="Count In Stock"
+                    name="countInStock"
+                    onChange={changeInput}
+                    value={product.countInStock || 0}
+                  />
                 </div>
               </div>
               <div className="row">
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Brand</h6>
-                    <Select
-                      value={selectedBrand}
-                      onChange={handleChangeBrand}
-                      displayEmpty
-                      inputProps={{ "aria-label": "Without label" }}
-                      className="w-100"
-                    >
-                      <MenuItem value="">None</MenuItem>
-                      {brands &&
-                        brands.length !== 0 &&
-                        brands
-                          .filter(
-                            (item) => item.subcategory === selectedSubCategory,
-                          )
-                          .map((item) => (
-                            <MenuItem key={item._id} value={item._id}>
-                              {item.name}
-                            </MenuItem>
-                          ))}
-                    </Select>
-                  </div>
+                  <DropdownField
+                    label="Brand"
+                    value={selectedBrand}
+                    onChange={setSelectedBrand}
+                    options={brands?.filter(
+                      (item) => item.subcategory === selectedSubCategory,
+                    )}
+                  />
                 </div>
                 <div className="col">
-                  <div className="form-group">
-                    <h6>Discount</h6>
-                    <input
-                      type="number"
-                      name="discount"
-                      onChange={changeInput}
-                      value={product.discount || 0}
-                    />
-                  </div>
+                  <FormInput
+                    label="Discount"
+                    name="discount"
+                    type="number"
+                    onChange={changeInput}
+                    value={product.discount || 0}
+                  />
                 </div>
                 <div className="col">
                   <div className="form-group">
@@ -317,46 +214,24 @@ const ProductEdit = () => {
                       value={valueRate}
                       defaultValue={product.rating ?? 0}
                       precision={0.5}
-                      onChange={changeRating}
+                      onChange={(e) => setValueRate(e.target.value)}
                       className="pt-2"
                     />
                   </div>
                 </div>
               </div>
-              <div className="imagesUploadSec">
-                <h5 className="mb-4">Media And Published</h5>
-                <div className="imgUploadBox d-flex align-items-center">
-                  {imagePreview.map((src, index) => (
-                    <div key={index} className="uploadBox position-relative">
-                      <span className="remove">
-                        <IoMdClose
-                          onClick={() => {
-                            setImagePreview((prev) =>
-                              prev.filter((_, i) => i !== index),
-                            );
-                            setProduct((prev) => ({
-                              ...prev,
-                              images: prev.images.filter((_, i) => i !== index),
-                            }));
-                          }}
-                        />
-                      </span>
-                      <img src={src} alt={`Preview ${index + 1}`} />
-                    </div>
-                  ))}
-                  <div className="uploadBox">
-                    <input type="file" multiple onChange={addImage} />
-                    <div className="info">
-                      <FaImages />
-                      <h5>image upload</h5>
-                    </div>
-                  </div>
-                </div>
-                <br />
-                <Button type="submit" className="btn-blue btn-lg btn-big w-100">
-                  PUBLISH AND VIEW
-                </Button>
-              </div>
+              <ImageUpload
+                images={product.images || []}
+                previews={imagePreview}
+                onImagesChange={(imgs) =>
+                  setProduct((prev) => ({ ...prev, images: imgs }))
+                }
+                onPreviewsChange={setImagePreview}
+              />
+              <br />
+              <Button type="submit" className="btn-blue btn-lg btn-big w-100">
+                PUBLISH AND VIEW
+              </Button>
             </div>
           </div>
         </div>

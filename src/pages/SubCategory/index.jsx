@@ -1,6 +1,3 @@
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { fetchDataFromAPI, deleteData } from "../../apis/api";
@@ -8,10 +5,12 @@ import Pagination from "@mui/material/Pagination";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import toast, { Toaster } from "react-hot-toast";
+import PageHeader from "../../components/PageHeader";
 
 const SubCategory = () => {
   const [subCategoryData, setSubCategoryData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
+  const [page, setPage] = useState(1);
 
   const loadData = () => {
     fetchDataFromAPI("/subcategory").then((data) =>
@@ -25,6 +24,7 @@ const SubCategory = () => {
   }, []);
 
   const handleChange = (event, value) => {
+    setPage(value);
     fetchDataFromAPI(`/category?page=${value}`).then((data) =>
       setCategoryData(data),
     );
@@ -45,28 +45,12 @@ const SubCategory = () => {
     <>
       <Toaster position="top-right" reverseOrder={false} />
       <div className="right-content w-100 page-transition">
-        <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Sub Category List</h5>
-          <div className="ms-auto d-flex align-items-center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              className="ml-auto breadcrumbs_"
-            >
-              <StyledBreadcrumb
-                component="a"
-                href="#"
-                label="Dashboard"
-                icon={<HomeIcon fontSize="small" />}
-              />
-              <StyledBreadcrumb component="a" href="#" label="Category" />
-            </Breadcrumbs>
-            <a href="/subcategory/add">
-              <Button className="btn-blue  ms-3 ps-3 pe-3">
-                Add Sub Category
-              </Button>
-            </a>
-          </div>
-        </div>
+        <PageHeader
+          title="Sub Category List"
+          breadcrumbs={[{ label: "Category" }]}
+          addButtonText="Add Sub Category"
+          addButtonLink="/subcategory/add"
+        />
         <div className="card shadow border-0 w-100 mt-4">
           <div className="card-body">
             <table className="table table-bordered table-striped v-align">
@@ -138,7 +122,8 @@ const SubCategory = () => {
           </div>
           <div className="d-flex tableFooter me-4">
             <Pagination
-              count={categoryData?.totalPages}
+              count={categoryData?.totalPages || 1}
+              page={page}
               color="primary"
               className="pagination"
               showFirstButton

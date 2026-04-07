@@ -1,17 +1,17 @@
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
-import { fetchDataFromAPI } from "../../apis/api";
+import { fetchDataFromAPI, deleteData } from "../../apis/api";
 import Pagination from "@mui/material/Pagination";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
+import PageHeader from "../../components/PageHeader";
+import toast from "react-hot-toast";
 
 const Brand = () => {
   const [brandData, setBrandData] = useState([]);
   const [subCategoryData, setSubCategoryData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchDataFromAPI("/category").then((data) => setCategoryData(data));
@@ -20,42 +20,40 @@ const Brand = () => {
   }, []);
 
   const handleChange = (event, value) => {
+    setPage(value);
     fetchDataFromAPI(`/subcategory?page=${value}`).then((data) =>
       setSubCategoryData(data),
     );
   };
 
   const handleClick = (event, chipKey) => {
-    console.log(`Chip with key ${chipKey} was clicked`);
+    // reserved for future use
   };
 
   const handleDelete = (event, chipId) => {
-    console.log(`Chip with id ${chipId} was deleted`);
+    if (!window.confirm("Bạn có chắc muốn xoá thương hiệu này?")) return;
+    deleteData(`/brand/delete/${chipId}`)
+      .then(() => {
+        toast.success("Xoá thương hiệu thành công");
+        setBrandData((prev) => ({
+          ...prev,
+          brandList: prev.brandList.filter((b) => b.id !== chipId),
+        }));
+      })
+      .catch(() => {
+        toast.error("Xoá thương hiệu thất bại");
+      });
   };
 
   return (
     <>
       <div className="right-content w-100 page-transition">
-        <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Brand List</h5>
-          <div className="ms-auto d-flex align-items-center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              className="ml-auto breadcrumbs_"
-            >
-              <StyledBreadcrumb
-                component="a"
-                href="#"
-                label="Dashboard"
-                icon={<HomeIcon fontSize="small" />}
-              />
-              <StyledBreadcrumb component="a" href="#" label="Brand" />
-            </Breadcrumbs>
-            <a href="/brand/add">
-              <Button className="btn-blue  ms-3 ps-3 pe-3">Add Brand</Button>
-            </a>
-          </div>
-        </div>
+        <PageHeader
+          title="Brand List"
+          breadcrumbs={[{ label: "Brand" }]}
+          addButtonText="Add Brand"
+          addButtonLink="/brand/add"
+        />
         <div className="card shadow border-0 w-100 mt-4">
           <div className="card-body">
             <table className="table table-bordered table-striped v-align">
@@ -118,7 +116,8 @@ const Brand = () => {
           </div>
           <div className="d-flex tableFooter me-4">
             <Pagination
-              count={subCategoryData?.totalPages}
+              count={subCategoryData?.totalPages || 1}
+              page={page}
               color="primary"
               className="pagination"
               showFirstButton

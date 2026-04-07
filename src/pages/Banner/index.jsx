@@ -1,12 +1,10 @@
-import StyledBreadcrumb from "../../utils/StyledBreadcrumb";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { fetchDataFromAPI, deleteData } from "../../apis/api";
 import { FaRegTrashAlt } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import toast, { Toaster } from "react-hot-toast";
+import PageHeader from "../../components/PageHeader";
 
 const Banner = () => {
   const [bannerData, setBannerData] = useState({
@@ -43,26 +41,12 @@ const Banner = () => {
     <>
       <Toaster position="top-right" reverseOrder={false} />
       <div className="right-content w-100 page-transition">
-        <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Banner List</h5>
-          <div className="ms-auto d-flex align-items-center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              className="ml-auto breadcrumbs_"
-            >
-              <StyledBreadcrumb
-                component="a"
-                href="#"
-                label="Dashboard"
-                icon={<HomeIcon fontSize="small" />}
-              />
-              <StyledBreadcrumb component="a" href="#" label="Banners" />
-            </Breadcrumbs>
-            <a href="/banner/add">
-              <Button className="btn-blue ms-3 ps-3 pe-3">Add Banner</Button>
-            </a>
-          </div>
-        </div>
+        <PageHeader
+          title="Banner List"
+          breadcrumbs={[{ label: "Banners" }]}
+          addButtonText="Add Banner"
+          addButtonLink="/banner/add"
+        />
         <div className="card shadow border-0 w-100 mt-4">
           <div className="card-body">
             <table className="table table-bordered table-striped v-align">
@@ -80,8 +64,7 @@ const Banner = () => {
                 </tr>
               </thead>
               <tbody>
-                {bannerData?.bannerList &&
-                bannerData.bannerList.length > 0 ? (
+                {bannerData?.bannerList && bannerData.bannerList.length > 0 ? (
                   bannerData.bannerList.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
