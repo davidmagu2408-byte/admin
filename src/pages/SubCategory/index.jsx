@@ -13,9 +13,7 @@ const SubCategory = () => {
   const [page, setPage] = useState(1);
 
   const loadData = () => {
-    fetchDataFromAPI("/subcategory").then((data) =>
-      setSubCategoryData(data.subCategory),
-    );
+    fetchDataFromAPI("/subcategory").then((data) => setSubCategoryData(data));
     fetchDataFromAPI("/category").then((data) => setCategoryData(data));
   };
 
@@ -92,9 +90,9 @@ const SubCategory = () => {
                         <td>{item.name}</td>
                         <td>
                           <div className="d-flex jsl">
-                            {subCategoryData &&
-                              subCategoryData.length !== 0 &&
-                              subCategoryData
+                            {subCategoryData.subCategoryList &&
+                              subCategoryData.subCategoryList.length !== 0 &&
+                              subCategoryData.subCategoryList
                                 .filter(
                                   (itemSub) => itemSub.category === item.id,
                                 )

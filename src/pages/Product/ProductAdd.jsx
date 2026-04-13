@@ -113,7 +113,7 @@ const ProductAdd = () => {
       .catch(() => setCategories([]));
     fetchDataFromAPI("/subcategory")
       .then((data) => {
-        setSubcategories(data.subCategory);
+        setSubcategories(data.subCategoryList);
       })
       .catch(() => setSubcategories([]));
     fetchDataFromAPI("/brand")

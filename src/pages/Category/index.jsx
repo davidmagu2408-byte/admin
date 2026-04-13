@@ -64,10 +64,7 @@ const Categories = () => {
                     return (
                       <tr key={item.id}>
                         <td>
-                          <div
-                            className="d-flex align-items-center "
-                            style={{ width: "150px" }}
-                          >
+                          <div className="d-flex align-items-center category-img-cell">
                             {item.images.map((it) => {
                               return (
                                 <div key={it} className="imgWrapper">

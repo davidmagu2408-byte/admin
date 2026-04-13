@@ -52,12 +52,12 @@ const Products = () => {
     });
     fetchDataFromAPI("/category")
       .then((data) => {
-        setCategories(data.category);
+        setCategories(data.categoryList);
       })
       .catch(() => setCategories([]));
     fetchDataFromAPI("/subcategory")
       .then((data) => {
-        setSubcategories(data.subCategory);
+        setSubcategories(data.subCategoryList);
       })
       .catch(() => setSubcategories([]));
     fetchDataFromAPI("/brand")
@@ -105,20 +105,20 @@ const Products = () => {
           <table className="table table-bordered table-striped v-align">
             <thead className="thead-dark">
               <tr>
-                <th scope="col" style={{ width: "80px" }}>
+                <th scope="col" className="th-img">
                   ẢNH
                 </th>
                 <th scope="col">TÊN SẢN PHẨM</th>
                 <th scope="col">DANH MỤC</th>
                 <th scope="col">THƯƠNG HIỆU</th>
                 <th scope="col">GIÁ</th>
-                <th scope="col" style={{ width: "80px" }}>
+                <th scope="col" className="th-stock">
                   KHO
                 </th>
-                <th scope="col" style={{ width: "120px" }}>
+                <th scope="col" className="th-rating">
                   ĐÁNH GIÁ
                 </th>
-                <th scope="col" style={{ width: "140px" }}>
+                <th scope="col" className="th-action">
                   HÀNH ĐỘNG
                 </th>
               </tr>
@@ -141,22 +141,13 @@ const Products = () => {
                         </div>
                       </td>
                       <td>
-                        <div style={{ maxWidth: "250px" }}>
+                        <div className="product-name-cell">
                           <a href={`/product/details/${item.id}`}>
-                            <h6
-                              className="mb-0"
-                              style={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                              }}
-                            >
+                            <h6 className="mb-0 product-name-text">
                               {item.name}
                             </h6>
                           </a>
-                          <span className="text-muted" style={{ fontSize: 12 }}>
+                          <span className="text-muted product-subcategory">
                             {
                               subcategories?.find(
                                 (s) => s.id === item.subcategory,
@@ -174,10 +165,7 @@ const Products = () => {
                       </td>
                       <td>
                         <div>
-                          <del
-                            className="old"
-                            style={{ fontSize: 13, color: "#999" }}
-                          >
+                          <del className="old price-old">
                             {formatVND(item.oldPrice)}
                           </del>
                           <span className="new text-danger d-block fw-bold">
@@ -188,7 +176,6 @@ const Products = () => {
                       <td>
                         <span
                           className={`badge ${item.countInStock > 0 ? "bg-success" : "bg-danger"}`}
-                          style={{ fontSize: 13 }}
                         >
                           {item.countInStock}
                         </span>

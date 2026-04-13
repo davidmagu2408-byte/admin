@@ -66,16 +66,16 @@ const Brand = () => {
                 </tr>
               </thead>
               <tbody>
-                {subCategoryData?.subCategory &&
-                  subCategoryData.subCategory.length !== 0 &&
-                  subCategoryData.subCategory.map((item) => {
+                {subCategoryData?.subCategoryList &&
+                  subCategoryData.subCategoryList.length !== 0 &&
+                  subCategoryData.subCategoryList.map((item) => {
                     return (
                       <tr key={item.id}>
                         <td>
                           <div className="d-flex align-items-center">
-                            {categoryData?.category &&
-                              categoryData.category.length !== 0 &&
-                              categoryData.category
+                            {categoryData?.categoryList &&
+                              categoryData.categoryList.length !== 0 &&
+                              categoryData.categoryList
                                 .filter((cat) => cat.id === item.category)
                                 .map((it) => it.name)}
                             /{item.name}
@@ -83,11 +83,12 @@ const Brand = () => {
                         </td>
                         <td>
                           <div className="d-flex jsl">
+                            {console.log(categoryData)}
                             {brandData?.brandList &&
                               brandData.brandList.length !== 0 &&
                               brandData.brandList
                                 .filter(
-                                  (brand) => brand.subcategory === item.id,
+                                  (brand) => brand.subcategory.id === item.id,
                                 )
                                 .map((it) => {
                                   return (

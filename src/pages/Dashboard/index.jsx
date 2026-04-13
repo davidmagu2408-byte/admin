@@ -10,12 +10,14 @@ import { MdShoppingBag } from "react-icons/md";
 import Rating from "@mui/material/Rating";
 import { IoEyeSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
+import Pagination from "@mui/material/Pagination";
 
 const Dashboard = () => {
   const [productData, setproductData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [page, setPage] = useState(1);
 
   const deleteProduct = (id) => {
     if (!window.confirm("Bạn có chắc muốn xoá sản phẩm này?")) return;
@@ -28,16 +30,24 @@ const Dashboard = () => {
         toast.error("Xoá sản phẩm thất bại. Vui lòng thử lại.");
       });
   };
+
+  const handleChange = (event, value) => {
+    setPage(value);
+    fetchDataFromAPI(`/product?page=${value}`).then((data) =>
+      setproductData(data),
+    );
+  };
+
   useEffect(() => {
     fetchDataFromAPI("/product").then((data) => setproductData(data));
     fetchDataFromAPI("/category")
       .then((data) => {
-        setCategories(data.category);
+        setCategories(data.categoryList);
       })
       .catch(() => setCategories([]));
     fetchDataFromAPI("/subcategory")
       .then((data) => {
-        setSubcategories(data.subCategory);
+        setSubcategories(data.subCategoryList);
       })
       .catch(() => setSubcategories([]));
     fetchDataFromAPI("/brand")
@@ -57,7 +67,7 @@ const Dashboard = () => {
               icon={<FaUserCircle />}
               grow={true}
               title="Total Products"
-              value={productData.product && productData.product.length}
+              value={productData.totalDocs || 0}
             />
             <DashboardBox
               color={["#c012e1", "#eb64fe"]}
@@ -85,7 +95,9 @@ const Dashboard = () => {
           <table className="table table-bordered table-striped v-align">
             <thead className="thead-dark">
               <tr>
-                <th scope="col">PRODUCT</th>
+                <th scope="col" width="23%">
+                  PRODUCT
+                </th>
                 <th scope="col">CATEGORY</th>
                 <th scope="col">SUBCATEGORY</th>
                 <th scope="col">BRAND</th>
@@ -95,16 +107,13 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {productData.product &&
-                productData.product.length !== 0 &&
-                productData.product.map((item) => {
+              {productData.productList &&
+                productData.productList.length !== 0 &&
+                productData.productList.map((item) => {
                   return (
                     <tr key={item.id}>
                       <td>
-                        <div
-                          className="d-flex align-items-center "
-                          style={{ width: "150px" }}
-                        >
+                        <div className="d-flex align-items-center product-cell">
                           <div className="imgWrapper ">
                             <div className="img card shadow m-0">
                               <img
@@ -194,6 +203,17 @@ const Dashboard = () => {
                 })}
             </tbody>
           </table>
+        </div>
+        <div className="d-flex tableFooter me-4">
+          <Pagination
+            count={productData?.totalPages || 1}
+            page={page}
+            color="primary"
+            className="pagination"
+            showFirstButton
+            showLastButton
+            onChange={handleChange}
+          />
         </div>
       </div>
     </div>

@@ -91,12 +91,12 @@ const ProductEdit = () => {
     });
     fetchDataFromAPI("/category")
       .then((data) => {
-        setCategories(data.category);
+        setCategories(data.categoryList);
       })
       .catch(() => setCategories([]));
     fetchDataFromAPI("/subcategory")
       .then((data) => {
-        setSubcategories(data.subCategory);
+        setSubcategories(data.subCategoryList);
       })
       .catch(() => setSubcategories([]));
     fetchDataFromAPI("/brand")
@@ -193,7 +193,7 @@ const ProductEdit = () => {
                     value={selectedBrand}
                     onChange={setSelectedBrand}
                     options={brands?.filter(
-                      (item) => item.subcategory === selectedSubCategory,
+                      (item) => item.subcategory.id === selectedSubCategory,
                     )}
                   />
                 </div>

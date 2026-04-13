@@ -127,9 +127,9 @@ function App() {
           className={`content ${isToggleSibar === true ? "" : "toggle"} ${isOpenLogin === true ? "full" : ""}`}
         >
           <Routes>
-            <Route path="/login" exact={true} element={<SignIn />} />
             {accessToken ? (
               <>
+                <Route path="/login" element={<Navigate to="/" replace />} />
                 <Route path="/" exact={true} element={<Dashboard />} />
                 <Route path="/category" exact={true} element={<Categories />} />
                 <Route
@@ -178,7 +178,7 @@ function App() {
                 />
               </>
             ) : (
-              <Route path="*" element={<Navigate to="/login" replace />} />
+              <Route path="/login" exact={true} element={<SignIn />} />
             )}
           </Routes>
         </div>
